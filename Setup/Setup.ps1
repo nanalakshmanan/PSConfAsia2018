@@ -78,7 +78,7 @@ $YamlDocs | % {
 
 #>
 
-$CommandDocs = @($RestartWindowsUpdateDoc)
+$CommandDocs = @($RestartWindowsUpdateDoc, $GetCredentialDoc)
 
 $CommandDocs | % {
 	$contents = Get-Content "../Documents/$($_).yml" -Raw
@@ -100,3 +100,10 @@ $Target.Values = @('HRAppWindows')
 $CommandId = (Send-SSMCommand -DocumentName AWS-UpdateSSMAgent -Target $Target).CommandId
 
 while(1){$Status = (Get-SSMCommandInvocation -CommandId $CommandId).Status;if ($Status -eq 'Success'){break;} sleep 2}              
+
+# Create SSM Parameter Store entries
+# Note: Secure string cannot be created using a cloud formation template
+Write-SSMParameter -Name "DBString" -Description "DB string for connection" -Type String -Value "server=myserver.dns.domain"
+
+Write-SSMParameter -Name "DBPassword" -Description "DB Password" -Type SecureString -Value "TestPassword"
+

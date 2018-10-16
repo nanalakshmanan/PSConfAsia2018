@@ -25,10 +25,25 @@ $AllStacks | % {
 $AllStacks | % {
 	Wait-Stack -StackName $_
 }
+$CommandDocs = @($RestartWindowsUpdateDoc, $GetCredentialDoc)
 
+$CommandDocs | % {
+	Remove-SSMDocument -Name $_ -Force
+}
+
+$AutomationDocs = @($RestartWindowsUpdateApprovalDoc)
+
+$AutomationDocs | % {
+	Remove-SSMDocument -Name $_ -Force
+}
 <#$AllDocs | % {
 	Remove-SSMDocument -Name $_ -Force
 }
 
 Get-SSMAssociationList | foreach AssociationId | %{Remove-SSMAssociation -AssociationId $_ -Force}
 #>
+
+# Remove SSM Parameters
+Remove-SSMParameter -Name "DBString" -Force
+
+Remove-SSMParameter -Name "DBPassword" -Force

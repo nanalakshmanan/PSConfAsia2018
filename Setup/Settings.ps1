@@ -16,6 +16,7 @@ $EnvironmentStack = 'DemoEnvironmentPSConf2018'
 
 $RestartWindowsUpdateDoc = 'Nana-RestartWindowsUpdate'
 $RestartWindowsUpdateApprovalDoc = 'Nana-RestartWindowsUpdateWithApproval'
+$GetCredentialDoc = 'Nana-GetCredentialFromStore'
 <#$StartEC2InstanceDoc = 'Nana-StartEC2Instance'
 $CheckCTLoggingStatusDoc = 'Nana-CheckCloudTrailLoggingStatus'
 $AuditCTLoggingDoc = 'Nana-AuditCloudTrailLogging'
