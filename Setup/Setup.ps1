@@ -69,7 +69,7 @@ $target.Values = 'Production'
 New-SSMAssociation -AssociationName HRAppInventoryAssociation -Name AWS-GatherSoftwareInventory -Target $target -ScheduleExpression 'cron(0 */30 * ? * *)'
 
 $AllDocs = @($BounceHostName, $RestartNodeWithApprovalDoc, $StartEC2InstanceDoc, $StartEC2WaitForRunningDoc, $CheckCTLoggingStatusDoc, $AuditCTLoggingDoc)
-$YamlDocs = @($StartEC2InstanceDoc, $StartEC2WaitForRunningDoc, $CheckCTLoggingStatusDoc, $AuditCTLoggingDoc)
+#$YamlDocs = @($StartEC2InstanceDoc, $StartEC2WaitForRunningDoc, $CheckCTLoggingStatusDoc, $AuditCTLoggingDoc)
 
 $YamlDocs | % {
 	$contents = Get-Content "../Documents/$($_).yml" -Raw
@@ -77,3 +77,26 @@ $YamlDocs | % {
 }
 
 #>
+
+$CommandDocs = @($RestartWindowsUpdateDoc)
+
+$CommandDocs | % {
+	$contents = Get-Content "../Documents/$($_).yml" -Raw
+	New-SSMDocument -Content $contents -DocumentFormat YAML -DocumentType Command -Name $_ 
+}
+
+$AutomationDocs = @($RestartWindowsUpdateApprovalDoc)
+
+$AutomationDocs | % {
+	$contents = Get-Content "../Documents/$($_).yml" -Raw
+	New-SSMDocument -Content $contents -DocumentFormat YAML -DocumentType Automation -Name $_ 
+}
+
+#update agent to run session manager
+$Target = New-Object Amazon.SimpleSystemsManagement.Model.Target          
+$Target.Key = 'tag:Name'                                                  
+$Target.Values = @('HRAppWindows') 
+
+$CommandId = (Send-SSMCommand -DocumentName AWS-UpdateSSMAgent -Target $Target).CommandId
+
+while(1){$Status = (Get-SSMCommandInvocation -CommandId $CommandId).Status;if ($Status -eq 'Success'){break;} sleep 2}              
