@@ -1,0 +1,15 @@
+$RoleName = 'SendMailLambdaRole'
+$InstanceProfileName = 'NanaSSM'
+$KeyPairName = 'NanasTestKeyPair'
+$WindowsAmidId = 'ami-01945499792201081'
+$VpcId = 'vpc-9920dce0'
+$BounceHostName = 'Nana-BounceHostRunbook'
+$LambdaFunctionName = 'SendEmailToManager'
+$RestartNodeWithApprovalDoc = 'Nana-RestartNodeWithApproval'
+$EnvironmentStack = 'DemoEnvironmentPSConf2018'
+
+<#$StartEC2InstanceDoc = 'Nana-StartEC2Instance'
+$CheckCTLoggingStatusDoc = 'Nana-CheckCloudTrailLoggingStatus'
+$AuditCTLoggingDoc = 'Nana-AuditCloudTrailLogging'
+$StartEC2WaitForRunningDoc = 'Nana-StartEC2InstanceWaitForRunning'
+#>
