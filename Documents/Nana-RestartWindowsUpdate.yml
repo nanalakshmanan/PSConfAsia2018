@@ -11,5 +11,6 @@ mainSteps:
   name: "example"
   inputs:
     runCommand:
-    - "Restart-Service wuauserv -Verbose"
+    -  | 
+      Restart-Service wuauserv -Verbose
 ...
