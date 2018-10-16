@@ -78,7 +78,7 @@ $YamlDocs | % {
 
 #>
 
-$CommandDocs = @($RestartWindowsUpdateDoc, $GetCredentialDoc)
+$CommandDocs = @($RestartWindowsUpdateDoc, $GetCredentialDoc, $ConfigureServicesDoc)
 
 $CommandDocs | % {
 	$contents = Get-Content "../Documents/$($_).yml" -Raw
