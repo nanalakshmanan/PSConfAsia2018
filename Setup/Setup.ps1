@@ -60,32 +60,14 @@ New-SSMDocument -Content $contents -DocumentType Automation -Name $BounceHostNam
 $contents = Get-Content ../Documents/Nana-RestartNodeWithApproval.json -Raw
 New-SSMDocument -Name $RestartNodeWithApprovalDoc -DocumentType Automation -TargetType '/AWS::EC2::Instance' -Content $contents
 
-<#
-# Create State manager associations
-$target = New-Object Amazon.SimpleSystemsManagement.Model.Target 
-$target.Key = 'tag:HRAppEnvironment'
-$target.Values = 'Production'
-
-New-SSMAssociation -AssociationName HRAppInventoryAssociation -Name AWS-GatherSoftwareInventory -Target $target -ScheduleExpression 'cron(0 */30 * ? * *)'
-
-$AllDocs = @($BounceHostName, $RestartNodeWithApprovalDoc, $StartEC2InstanceDoc, $StartEC2WaitForRunningDoc, $CheckCTLoggingStatusDoc, $AuditCTLoggingDoc)
-#$YamlDocs = @($StartEC2InstanceDoc, $StartEC2WaitForRunningDoc, $CheckCTLoggingStatusDoc, $AuditCTLoggingDoc)
-
-$YamlDocs | % {
-	$contents = Get-Content "../Documents/$($_).yml" -Raw
-	New-SSMDocument -Content $contents -DocumentFormat YAML -DocumentType Automation -Name $_ 
-}
-
-#>
-
-$CommandDocs = @($RestartWindowsUpdateDoc, $GetCredentialDoc, $ConfigureServicesDoc)
+$CommandDocs = @($RestartWindowsUpdateDoc, $GetCredentialDoc, $ConfigureServicesDoc, $DscComplianceDoc, $RestartServiceCommandDoc)
 
 $CommandDocs | % {
 	$contents = Get-Content "../Documents/$($_).yml" -Raw
 	New-SSMDocument -Content $contents -DocumentFormat YAML -DocumentType Command -Name $_ 
 }
 
-$AutomationDocs = @($RestartWindowsUpdateApprovalDoc)
+$AutomationDocs = @($RestartWindowsUpdateApprovalDoc, $RestartServiceDoc)
 
 $AutomationDocs | % {
 	$contents = Get-Content "../Documents/$($_).yml" -Raw

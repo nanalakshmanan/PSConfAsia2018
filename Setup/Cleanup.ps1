@@ -4,7 +4,6 @@ param(
 . "./Settings.ps1"
 
 $AllStacks = @($EnvironmentStack)
-#$AllDocs = @($BounceHostName, $RestartNodeWithApprovalDoc, $StartEC2InstanceDoc, $StartEC2WaitForRunningDoc, $CheckCTLoggingStatusDoc, $AuditCTLoggingDoc)
 function Wait-Stack
 {
 	param(
@@ -25,21 +24,17 @@ $AllStacks | % {
 $AllStacks | % {
 	Wait-Stack -StackName $_
 }
-$CommandDocs = @($RestartWindowsUpdateDoc, $GetCredentialDoc, $ConfigureServicesDoc)
+$CommandDocs = @($RestartWindowsUpdateDoc, $GetCredentialDoc, $ConfigureServicesDoc, $DscComplianceDoc, $RestartServiceCommandDoc)
 
 $CommandDocs | % {
 	Remove-SSMDocument -Name $_ -Force
 }
 
-$AutomationDocs = @($RestartWindowsUpdateApprovalDoc)
+$AutomationDocs = @($RestartWindowsUpdateApprovalDoc, $RestartServiceDoc)
 
 $AutomationDocs | % {
 	Remove-SSMDocument -Name $_ -Force
 }
-<#$AllDocs | % {
-	Remove-SSMDocument -Name $_ -Force
-}
-#>
 Get-SSMAssociationList | foreach AssociationId | %{Remove-SSMAssociation -AssociationId $_ -Force}
 
 
@@ -47,3 +42,5 @@ Get-SSMAssociationList | foreach AssociationId | %{Remove-SSMAssociation -Associ
 Remove-SSMParameter -Name "DBString" -Force
 
 Remove-SSMParameter -Name "DBPassword" -Force
+
+aws ssm delete-inventory --type-name 'Custom:DscCompliance' --schema-delete-option DeleteSchema
