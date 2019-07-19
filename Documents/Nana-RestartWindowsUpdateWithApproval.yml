@@ -18,7 +18,7 @@ parameters:
   SNSTopicArn:
       type: String
       description: (Required) The SNS topic ARN used to send pending approval notification for start instance action. The SNS topic name must start with Automation.
-      default: arn:aws:sns:{{global:REGION}}:675675802741:HRApplicationAlerts
+      default: arn:aws:sns:{{global:REGION}}:{{global:ACCOUNT_ID}}:HRApplicationAlerts
   Email:
     type: String
     description: (Required) Email to notify of restarts
